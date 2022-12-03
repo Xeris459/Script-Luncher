@@ -85,7 +85,7 @@
 
 <script lang="ts" setup>
 import { onClickOutside } from "@vueuse/core";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import StarOutline from "vue-material-design-icons/StarOutline.vue";
 import Star from "vue-material-design-icons/Star.vue";
 import FilterMultiple from "vue-material-design-icons/FilterMultiple.vue";
@@ -96,6 +96,14 @@ import { useSetting } from "../store/store";
 import { useScriptList } from "../store/scriptList";
 
 import { evalFile } from "../lib/utils";
+
+interface ListInterface {
+  image?: string;
+  title?: string;
+  realName: string;
+  path: string;
+  fav: boolean;
+}
 
 const store = useSetting();
 const getScriptList = useScriptList();
@@ -112,8 +120,8 @@ const onHoverFilter = ref("#FFFFFF");
 const onHoverRefresh = ref("#FFFFFF");
 const showFillter = ref(false);
 const target = ref(null);
-const jsx = ref(store.getfilterList.includes("jsx") ? true : false);
-const jsxbin = ref(store.getfilterList.includes("jsxbin") ? true : false);
+const jsx = ref(store.getfilterList.includes("jsx"));
+const jsxbin = ref(store.getfilterList.includes("jsxbin"));
 
 let runFile = (file: string) => {
   evalFile(file);
@@ -152,6 +160,19 @@ watch(
   },
   { deep: true }
 );
+
+onMounted(() => {
+  const filterList = ["jsx", "jsxbin"];
+
+  if (localStorage.getItem("filter") === null)
+    localStorage.setItem("filter", JSON.stringify(filterList));
+  else {
+    const local = JSON.parse(localStorage.getItem("filter") || "[]");
+    filterList.forEach((val: string) => {
+      if (local.includes(val)) store.setFilterList(val);
+    });
+  }
+});
 
 onClickOutside(target, () => {
   showFillter.value = false;

@@ -5,15 +5,15 @@ export const useSetting = defineStore("setting", {
     action: false,
     image: true,
     favorite: true,
-    filterList: ["jsx", "jsxbin"],
+    filterList: [],
     viewMode: "list",
     about: false
   }),
   getters: {
     getActionStatus: (state) => state.action,
     getImageStatus: (state) => state.image,
-    getFavoriteStatus: (state) => state.favorite,
-    getViewMode: (state) => state.viewMode,
+    getFavoriteStatus: (state) : boolean => state.favorite,
+    getViewMode: (state) : string => state.viewMode,
     getfilterList: (state) : string[] => state.filterList,
     getAboutStatus: (state) => state.about,
   },
@@ -25,6 +25,8 @@ export const useSetting = defineStore("setting", {
       if(this.filterList.includes(payload))
         this.filterList = this.filterList.filter((v) => payload != v)
       else this.filterList.push(payload)
+
+      localStorage.setItem("filter", JSON.stringify(this.getfilterList));
     },
     setImageStatus() {
       this.image = !this.image;

@@ -59,7 +59,7 @@
 
 <script lang="ts" setup>
 import { onClickOutside } from "@vueuse/core";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import MenuIcon from "vue-material-design-icons/CogOutline.vue";
 import { useSetting } from "../store/store";
 
@@ -80,5 +80,39 @@ let buttonClickSetting = () => {
 
 onClickOutside(target, () => {
   showSetting.value = false;
+});
+
+watch(store, (newval) => {
+  const localFavorite = localStorage.getItem("favorite") || "true";
+  const favorite = localFavorite === "true";
+  console.log(favorite);
+  console.log(newval.$state.favorite);
+  if (newval.$state.favorite != favorite)
+    localStorage.setItem("favorite", store.getFavoriteStatus.toString());
+
+  const localImage = localStorage.getItem("favorite") || "true";
+  const image = localImage === "true";
+  if (newval.$state.image != image)
+    localStorage.setItem("image", store.getImageStatus.toString());
+});
+
+onMounted(() => {
+  if (localStorage.getItem("favorite") == null)
+    localStorage.setItem("favorite", store.getFavoriteStatus.toString());
+  else {
+    const local = localStorage.getItem("favorite") || "true";
+    const favorite = local === "true";
+
+    if (favorite != store.getFavoriteStatus) store.setFavoriteStatus();
+  }
+
+  if (localStorage.getItem("image") == null) {
+    localStorage.setItem("image", store.getImageStatus.toString());
+  } else {
+    const local = localStorage.getItem("image") || "true";
+    const image = local === "true";
+
+    if (image != store.getImageStatus) store.setImageStatus();
+  }
 });
 </script>
