@@ -146,6 +146,20 @@ let RefreshScript = () => {
   getScriptList.setInstalledList([]);
   loadFromLocal();
 };
+
+watch(
+  getScriptList.getInstalledList, // watch pinia store script list
+  async () => {
+    await fs.writeFile(
+      ScriptLocationFile.value,
+      JSON.stringify(getScriptList.getInstalledList),
+      (error) => {
+        if (error) return alert(error);
+      }
+    );
+  },
+  { deep: true }
+);
 </script>
 
 <template>
