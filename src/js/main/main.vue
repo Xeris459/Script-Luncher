@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { fs, path } from "../lib/node";
 import { csi, subscribeBackgroundColor } from "../lib/utils";
 import "../index.scss";
@@ -20,21 +20,28 @@ const extScript = ref("");
 const ScriptLocationFile = ref("");
 const customScriptLocationFile = ref("");
 
-onMounted(() => {
+onMounted(async () => {
   if (window.cep) {
     subscribeBackgroundColor((c: string) => {
       backgroundColor.value = c;
     });
 
-    extRoot.value = csi.getSystemPath("extension");
+    extRoot.value =
+      csi.getSystemPath("myDocuments") + "/Xeris459_production/ScriptLauncher";
     extScript.value = csi.getSystemPath("hostApplication");
+
     locationScript.value =
       extScript.value.slice(0, extScript.value.length - 11) + "Scripts";
     locationScriptPanel.value =
       extScript.value.slice(0, extScript.value.length - 11) +
       "Scripts/ScriptUI Panels";
-    ScriptLocationFile.value = `${extRoot.value}/assets/script.json`;
-    customScriptLocationFile.value = `${extRoot.value}/assets/customScript.json`;
+
+    ScriptLocationFile.value = `${extRoot.value}/ScriptLauncher.json`;
+    customScriptLocationFile.value = `${extRoot.value}/customScriptLauncher.json`;
+
+    if (!fs.existsSync(extRoot.value)) {
+      await fs.mkdirSync(extRoot.value, { recursive: true });
+    }
 
     if (fs.existsSync(ScriptLocationFile.value)) {
       fs.readFile(ScriptLocationFile.value, (err, data) => {
@@ -52,50 +59,48 @@ onMounted(() => {
   }
 });
 
-let loadFromLocal = () => {
-  fs.readdir(locationScript.value, (err, files) => {
-    let imagePath: string[] = [];
-    files.forEach((file, index) => {
-      let ext = path.extname(file);
+let loadFromLocal = async () => {
+  // define folder for scan
+  const ScriptScan = ["Scripts", "Scripts/ScriptUI Panels"];
 
-      if (ext === `.jsx` || ext === `.jsxbin`) {
-        getScriptList.addInstalledList({
-          path: locationScript.value + "/" + file,
-          image: "",
-          title: "",
-          fav: false,
-          realName: file,
-        });
-      }
+  // loop define folder
+  ScriptScan.forEach(async (value) => {
+    // get real path
+    const scriptPath =
+      extScript.value.slice(0, extScript.value.length - 11) + value;
 
-      if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`) {
-        imagePath.push(file);
-      }
-    });
+    // read file in scriptPath
+    await fs.readdir(scriptPath, async (err, files) => {
+      if (err) return alert("File read failed: " + err); // throw error when error
 
-    imagePath.forEach((val) => {
-      fs.readFile(locationScript.value + "/" + val, (err, data) => {
-        getScriptList.addImageFromLocal(
-          val,
-          "data:image/png;base64," + data.toString("base64")
-        );
+      let imagePath: string[] = []; // define image path
+      await files.forEach((file, index) => {
+        // loop all list of file
+        let ext = path.extname(file); // get extension of file
+
+        if (ext === `.jsx` || ext === `.jsxbin`) {
+          // save data of file to pinia
+          getScriptList.addInstalledList({
+            path: locationScript.value + "/" + file,
+            image: "",
+            title: "",
+            fav: false,
+            realName: file,
+          });
+        }
+
+        if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`)
+          imagePath.push(file); // cek if file is image
       });
-    });
-  });
 
-  fs.readdir(locationScriptPanel.value, (err, files) => {
-    files.forEach((file, index) => {
-      let ext = path.extname(file);
+      // loop list of image
+      imagePath.forEach((val) => {
+        fs.readFile(locationScript.value + "/" + val, (err, data) => {
+          const convert = "data:image/png;base64," + data.toString("base64"); // convert image file to base64 URI format
 
-      if (ext === `.jsxbin`) {
-        getScriptList.addInstalledList({
-          path: locationScriptPanel.value + "/" + file,
-          image: "",
-          title: "",
-          fav: false,
-          realName: file,
+          getScriptList.addImageFromLocal(val, convert);
         });
-      }
+      });
     });
   });
 
@@ -130,6 +135,7 @@ let loadFromLocal = () => {
   }
 };
 
+// function for refresh
 let RefreshScript = () => {
   getScriptList.setInstalledList([]);
   loadFromLocal();
