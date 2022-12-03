@@ -3,8 +3,8 @@ import { version } from "./package.json";
 
 const config: CEP_Config = {
   version,
-  id: "com.axerisu.library",
-  displayName: "Script Liblary Launcher",
+  id: "com.axerisu.ScriptLibrary",
+  displayName: "Script Liblary Launcher Test",
   symlink: "local",
   port: 3000,
   servePort: 5000,
@@ -31,7 +31,7 @@ const config: CEP_Config = {
     {
       mainPath: "./main/index.html",
       name: "main",
-      panelDisplayName: "Script Liblary Launcher",
+      panelDisplayName: "Script Liblary Launcher Test",
       autoVisible: true,
       width: 600,
       height: 650,
