@@ -128,18 +128,6 @@ let loadFromLocal = () => {
       }
     );
   }
-
-  fs.writeFile(
-    ScriptLocationFile.value,
-    JSON.stringify(getScriptList.getInstalledList),
-    (error) => {
-      if (error) {
-        alert(error);
-        console.log("An error has occurred ", error);
-        return;
-      }
-    }
-  );
 };
 
 let RefreshScript = () => {
