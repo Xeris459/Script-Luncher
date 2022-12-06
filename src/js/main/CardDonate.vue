@@ -1,10 +1,10 @@
 <template>
   <div
-    class="p-10 z-20 bg-black/20 absolute w-screen h-screen flex justify-center items-center"
+    class="p-5 z-20 bg-black/20 absolute w-screen h-screen flex justify-center items-center"
   >
     <div
       ref="target"
-      class="backdrop-blur-sm backdrop-brightness-70 backdrop-saturate-0 border border-1 border-zinc-700 text-white w-4/5 p-3 rounded-lg flex flex-col items-start shadow-2xl"
+      class="bg-zinc-800 border border-1 border-zinc-700 text-white w-4/5 p-3 rounded-lg flex flex-col items-start shadow-2xl"
     >
       <h1 class="font-bold mb-2 text-center">About</h1>
       <span>Script Library v0.1.2</span>

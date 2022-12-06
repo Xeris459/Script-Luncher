@@ -1,27 +1,27 @@
 <template>
-  <article class="text-white w-full p-2">
-    <div class="flex flex-row border-b-2 border-gray-700 hover:border-pink-500">
+  <article class="text-white w-full p-1">
+    <div class="flex flex-row border-b-2 border-zinc-700 hover:border-indigo-500 transition-all duration-500 ease-in-out text-xs">
       <div
-        class="grid grid-cols-12 w-full justify-items-start items-center hover:bg-gray-500 cursor-default group"
+        class="grid grid-cols-12 w-full justify-items-start items-center hover:bg-zinc-600 cursor-default group"
       >
         <div
-          class="col-span-1 w-full h-10 flex flex-row justify-center items-center"
+          class="col-span-1 w-full h-2 flex flex-row justify-center items-center"
           v-if="store.getFavoriteStatus"
         >
           <StarOutline
             v-if="!props.list.fav"
-            @mouseover="onHoverStar = '#ec4899'"
+            @mouseover="onHoverStar = '#6366f1'"
             @mouseleave="onHoverStar = '#FFFFFF'"
             @click="SetFavorite()"
-            :size="24"
+            :size="18"
             :fillColor="onHoverStar"
           />
           <Star
             v-else
-            @mouseover="onHoverStar = '#ec4899'"
+            @mouseover="onHoverStar = '#6366f1'"
             @mouseleave="onHoverStar = '#FFFFFF'"
             @click="SetFavorite()"
-            :size="24"
+            :size="18"
             :fillColor="onHoverStar"
           />
         </div>

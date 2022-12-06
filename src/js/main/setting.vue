@@ -9,7 +9,7 @@
       />
     <div
       v-if="showSetting"
-      class="absolute w-48 right-8 top-0 z-10 backdrop-blur-sm backdrop-brightness-90 backdrop-saturate-0 rounded-lg transition-all duration-150 shadow-lg border border-1 border-zinc-700"
+      class="absolute w-48 right-8 top-0 z-10 bg-zinc-900 rounded-lg transition-all duration-150 shadow-lg border border-1 border-zinc-700"
     >
       <div class="flex flex-col justify-start p-4 text-white">
         <span class="text-left text-gray-400 tracking-widest">SETTING</span>

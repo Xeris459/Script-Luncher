@@ -166,14 +166,9 @@ watch(
       <div class="p-2 flex-auto justify-between">
         <div>
           <div class="flex justify-between">
-          <h2 class="font-semibold text-2xl text-indigo-500 mb-2 text-center">Script<span class="font-thin text-white">Library</span></h2>
+          <h2 class="font-semibold text-2xl text-indigo-500 mb-2 text-center">Script<span class="font-thin text-white">Library</span><sup class="text-xs font-bold">BETA</sup></h2>
           <div class="flex">
-            <input
-              type="text"
-              class="text-xs text-white p-2 mt-1 outline outline-1 outline-indigo-800 hover:outline-indigo-500 transition-all ease-in-out duration-500 rounded-md text-center tracking-tight focus:bg-zinc-800 focus:text-white focus:outline-indigo-600 w-24 bg-indigo-700 focus:w-52 ml-2 h-8 "
-              v-model="Search"
-              placeholder="Search"
-            /><setting class="mt-2 ml-2 rotate-0"/>
+            <setting class="mt-2 ml-2 rotate-0"/>
           </div>
           </div>
           
@@ -182,7 +177,7 @@ watch(
           <list
           @RefreshScript="RefreshScript"
           :search="Search"
-          class="mt-4 h-screen overflow-y-auto flex flex-col w-full"
+          class="mt-1 h-screen overflow-y-auto flex flex-col w-full"
           />
         </div>
       </div>
