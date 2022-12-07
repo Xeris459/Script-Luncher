@@ -4,52 +4,55 @@
       <div class="flex flex-row">
         <StarOutline
           v-if="!getScriptList.getFavorite"
-          @mouseover="onHoverStar = '#ec4899'"
+          @mouseover="onHoverStar = '#6366f1'"
           @mouseleave="onHoverStar = '#FFFFFF'"
           @click="getScriptList.setFavorite(true)"
-          :size="32"
+          :size="24"
           :fillColor="onHoverStar"
         />
         <Star
           v-else
-          @mouseover="onHoverStar = '#ec4899'"
+          @mouseover="onHoverStar = '#6366f1'"
           @mouseleave="onHoverStar = '#FFFFFF'"
           @click="getScriptList.setFavorite(false)"
-          :size="32"
+          :size="24"
           :fillColor="onHoverStar"
         />
         <Refresh
           class="cursor-pointer"
-          @mouseover="onHoverRefresh = '#ec4899'"
+          @mouseover="onHoverRefresh = '#6366f1'"
           @mouseleave="onHoverRefresh = '#FFFFFF'"
           @click="$emit('RefreshScript')"
-          :size="32"
+          :size="24"
           :fillColor="onHoverRefresh"
         />
       </div>
+      <input
+              type="text"
+              class="text-xs text-white p-2 border border-1 border-indigo-800 hover:border-indigo-500 transition-all ease-in-out duration-500 rounded-md text-center tracking-tight focus:bg-zinc-800 focus:text-white focus:border-indigo-600 w-full bg-indigo-700 mx-2 h-6" placeholder="Search"
+            />
       <div class="relative flex flex-row" ref="target">
         <FilterMultiple
           class="cursor-pointer"
-          @mouseover="onHoverFilter = '#ec4899'"
+          @mouseover="onHoverFilter = '#6366f1'"
           @mouseleave="onHoverFilter = '#FFFFFF'"
           @click="showFillter = !showFillter"
-          :size="32"
+          :size="24"
           :fillColor="onHoverFilter"
         />
         <div
           v-if="showFillter"
-          class="absolute top-8 w-64 right-0 z-10 !bg-slate-50 rounded-lg transition-all duration-150"
+          class="absolute right-8 top-0 bg-zinc-900 border border-1 border-zinc-700 w-48 z-10 rounded-lg transition-all duration-150"
         >
-          <div class="flex flex-col justify-start p-4">
-            <span class="text-gray-400">Setting Filter</span>
-            <hr />
-            <ul class="flex flex-col items-start justify-start mt-4">
+          <div class="flex flex-col justify-start p-4 text-white">
+            <span class="text-gray-400 text-left tracking-widest">SETTING FILTER</span>
+            <ul class="flex flex-col items-start justify-start mt-2">
               <li>
                 <label class="form-check cursor-pointer">
                   <input
                     v-model="jsx"
                     @click="store.setFilterList('jsx')"
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-pink-500 checked:border-pink-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
                     type="checkbox"
                   />
                   JSX
@@ -60,7 +63,7 @@
                   <input
                     v-model="jsxbin"
                     @click="store.setFilterList('jsxbin')"
-                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-pink-500 checked:border-pink-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                    class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-bottom transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
                     type="checkbox"
                   />
                   JSXBIN
@@ -72,7 +75,7 @@
       </div>
     </div>
     <div
-      class="flex flex-col h-full scrollbar-thin scrollbar-thumb-pink-700 scrollbar-track-gray-300 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full border bottom-1"
+      class="flex flex-col h-screen scrollbar-thin scrollbar-thumb-indigo-700 scrollbar-track-zinc-800 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full border bottom-1 border-zinc-700 rounded-md"
     >
       <listMode
         v-on:dblclick="runFile(list.path)"

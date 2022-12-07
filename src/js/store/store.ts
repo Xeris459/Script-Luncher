@@ -21,7 +21,7 @@ export const useSetting = defineStore("setting", {
     setActionStatus() {
       this.action != this.action;
     },
-    setFilterList(payload: string) {
+    setFilterList(payload: never) {
       if(this.filterList.includes(payload))
         this.filterList = this.filterList.filter((v) => payload != v)
       else this.filterList.push(payload)
