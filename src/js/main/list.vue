@@ -97,14 +97,6 @@ import { useScriptList } from "../store/scriptList";
 
 import { evalFile } from "../lib/utils";
 
-interface ListInterface {
-  image?: string;
-  title?: string;
-  realName: string;
-  path: string;
-  fav: boolean;
-}
-
 const store = useSetting();
 const getScriptList = useScriptList();
 
