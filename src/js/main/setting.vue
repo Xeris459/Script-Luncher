@@ -85,8 +85,7 @@ onClickOutside(target, () => {
 watch(store, (newval) => {
   const localFavorite = localStorage.getItem("favorite") || "true";
   const favorite = localFavorite === "true";
-  console.log(favorite);
-  console.log(newval.$state.favorite);
+
   if (newval.$state.favorite != favorite)
     localStorage.setItem("favorite", store.getFavoriteStatus.toString());
 
