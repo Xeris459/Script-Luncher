@@ -12,7 +12,7 @@ import cardDonate from "./CardDonate.vue";
 const getScriptList = useScriptList();
 const getSetting = useSetting();
 const Search = ref("");
-const backgroundColor = ref("#282c34");
+const backgroundColor = ref("#18181b");
 const locationScript = ref("");
 const locationScriptPanel = ref("");
 const extRoot = ref("");
@@ -163,24 +163,23 @@ watch(
   >
     <section class="w-screen h-screen">
       <cardDonate v-if="getSetting.getAboutStatus" />
-      <div class="flex flex-start flex-col w-full h-full p-4 m-auto">
-        <div class="flex justify-between items-center">
-          <h2 class="font-bold text-2xl text-white mb-4">Script Library</h2>
-          <setting />
-        </div>
-        <div class="flex gap-2 justify-center">
-          <input
-            type="text"
-            class="w-full text-xs text-black p-2 outline-1 outline-pink-500 rounded-none"
-            v-model="Search"
-            placeholder="search script"
-          />
-        </div>
-        <list
+      <div class="p-2 flex-auto justify-between">
+        <div>
+          <div class="flex justify-between">
+          <h2 class="font-semibold text-2xl text-indigo-500 mb-2 text-center">Script<span class="font-thin text-white">Library</span><sup class="text-xs font-bold">BETA</sup></h2>
+          <div class="flex">
+            <setting class="mt-2 ml-2 rotate-0"/>
+          </div>
+          </div>
+          
+          <div>
+          </div>
+          <list
           @RefreshScript="RefreshScript"
           :search="Search"
-          class="mt-4 h-full overflow-y-auto flex flex-col"
-        />
+          class="mt-1 h-screen overflow-y-auto flex flex-col w-full"
+          />
+        </div>
       </div>
     </section>
   </div>

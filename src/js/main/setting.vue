@@ -2,19 +2,18 @@
   <div class="relative" ref="target">
     <MenuIcon
       class="cursor-pointer"
-      @mouseover="onHover = '#ec4899'"
+      @mouseover="onHover = '#6366f1'"
       @mouseleave="onHover = '#FFFFFF'"
       :fillColor="onHover"
       @click="buttonClickSetting"
-    />
+      />
     <div
       v-if="showSetting"
-      class="absolute top-8 w-64 right-0 z-10 !bg-slate-50 rounded-lg transition-all duration-150"
+      class="absolute w-48 right-8 top-0 z-10 bg-zinc-900 rounded-lg transition-all duration-150 shadow-lg border border-1 border-zinc-700"
     >
-      <div class="flex flex-col justify-start p-4">
-        <span class="text-gray-400">Setting</span>
-        <hr />
-        <ul class="flex flex-col items-start justify-start mt-4">
+      <div class="flex flex-col justify-start p-4 text-white">
+        <span class="text-left text-gray-400 tracking-widest">SETTING</span>
+        <ul class="flex flex-col items-start justify-start mt-2">
           <!-- <li>
             <label class="form-check cursor-pointer">
               <input
@@ -29,7 +28,7 @@
             <label class="form-check cursor-pointer">
               <input
                 v-model="store.image"
-                class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-pink-500 checked:border-pink-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                class="form-check-input appearance-none h-4 w-4 border border-1 border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
                 type="checkbox"
               />
               Show Image
@@ -39,7 +38,7 @@
             <label class="form-check cursor-pointer">
               <input
                 v-model="store.favorite"
-                class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-pink-500 checked:border-pink-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
                 type="checkbox"
               />
               Show Favorite
@@ -47,10 +46,10 @@
           </li>
         </ul>
         <div
-          class="flex justify-between text-slate-500 text-xs font-medium mt-5"
+          class="flex justify-between text-slate-500 text-xs font-medium mt-2"
         >
           <!-- <a href="http://" class="hover:text-pink-500">Donate</a> -->
-          <a href="#" @click="showAbout()" class="hover:text-pink-500">About</a>
+          <a href="#" @click="showAbout()" class="border border-1 border-zinc-600 hover:border-indigo-500 px-5 py-2 rounded-md bg-zinc-800 text-white hover:bg-indigo-700 transition-all duration-500 ease-in-out mt-1">About</a>
         </div>
       </div>
     </div>
