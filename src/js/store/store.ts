@@ -1,28 +1,37 @@
 import { defineStore } from "pinia";
 
+interface Setting {
+  action: boolean,
+  image: boolean,
+  favorite: boolean,
+  filterList: string[],
+  viewMode: string,
+  about: boolean
+}
+
 export const useSetting = defineStore("setting", {
-  state: () => ({
+  state: (): Setting => ({
     action: false,
-    image: true,
+    image: false,
     favorite: true,
-    filterList: [],
+    filterList: ["jsx", "jsxbin"],
     viewMode: "list",
     about: false
   }),
   getters: {
     getActionStatus: (state) => state.action,
     getImageStatus: (state) => state.image,
-    getFavoriteStatus: (state) : boolean => state.favorite,
-    getViewMode: (state) : string => state.viewMode,
-    getfilterList: (state) : string[] => state.filterList,
+    getFavoriteStatus: (state): boolean => state.favorite,
+    getViewMode: (state): string => state.viewMode,
+    getfilterList: (state): string[] => state.filterList,
     getAboutStatus: (state) => state.about,
   },
   actions: {
     setActionStatus() {
       this.action != this.action;
     },
-    setFilterList(payload: never) {
-      if(this.filterList.includes(payload))
+    setFilterList(payload: string) {
+      if (this.getfilterList.includes(payload))
         this.filterList = this.filterList.filter((v) => payload != v)
       else this.filterList.push(payload)
 
