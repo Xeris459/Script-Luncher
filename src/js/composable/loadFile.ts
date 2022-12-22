@@ -18,6 +18,7 @@ const isFirstLoad = ref(true)
 const extRoot = ref("")
 const customScriptLocationFile = ref("")
 const extScript = ref("")
+const deepScanCount = ref(1)
 const FavStore = ref<FavScript[]>([])
 
 export function useFile() {
@@ -42,7 +43,8 @@ export function useFile() {
             favorite: setting.$state.favorite,
             filterList: setting.$state.filterList,
             viewMode: setting.$state.viewMode,
-            folder: [{ path: "Scripts", deepScan: true }]
+            folder: [{ path: "Scripts", deepScan: true, maxDeepScan: 1 }],
+            exludeFolderName: ["(instructional)", "(support)", "Shutdown", "Startup", "mac"]
         },
         Script: SavedScript
     })
@@ -139,7 +141,9 @@ export function useFile() {
         if (!fs.existsSync(extRoot.value)) await fs.mkdirSync(extRoot.value, { recursive: true });
     }
 
-    function deepScan(PathArray: string, deep: boolean = false) {
+    function deepScan(PathArray: string, deep: boolean = false, deepCountMax: number = 1, root: boolean = false, exclude: string) {
+        if (root) deepScanCount.value = 1;
+
         fs.readdir(PathArray, async (err, files) => {
             if (err) return alert("File read failed: " + err);
 
@@ -148,46 +152,51 @@ export function useFile() {
                 let ext = path.extname(file);
 
                 fs.lstat(PathArray + "/" + file, (err, stats) => {
+                    // if (exclude.includes(file)) return;
+
                     if (stats.isDirectory()) {
-                        if (deep) deepScan(PathArray + "/" + file, deep)
-                    }
-
-                    if (stats.isFile()) {
-                        if (ext === `.jsx` || ext === `.jsxbin`) {
-                            const Find: FavScript | undefined = FavStore.value.find((x: FavScript) => x.realName == file)
-                            if (Find) {
-                                const FindScript: FavScript = Find
-                                scriptList.addInstalledList({
-                                    path: PathArray + "/" + file,
-                                    image: FindScript.image,
-                                    title: FindScript.title,
-                                    fav: FindScript.fav,
-                                    hide: FindScript.hide,
-                                    realName: file,
-                                });
-                            } else {
-                                scriptList.addInstalledList({
-                                    path: PathArray + "/" + file,
-                                    image: "",
-                                    title: "",
-                                    fav: false,
-                                    hide: false,
-                                    realName: file,
-                                });
-                            }
+                        if (deep && deepScanCount.value <= deepCountMax) {
+                            deepScanCount.value = deepScanCount.value - 1;
+                            deepScan(PathArray + "/" + file, deep, 1, false, exclude)
                         }
+                    } else {
+                        if (stats.isFile()) {
+                            if (ext === `.jsx` || ext === `.jsxbin`) {
+                                const Find: FavScript | undefined = FavStore.value.find((x: FavScript) => x.realName == file)
+                                if (Find) {
+                                    const FindScript: FavScript = Find
+                                    scriptList.addInstalledList({
+                                        path: PathArray + "/" + file,
+                                        image: FindScript.image,
+                                        title: FindScript.title,
+                                        fav: FindScript.fav,
+                                        hide: FindScript.hide,
+                                        realName: file,
+                                    });
+                                } else {
+                                    scriptList.addInstalledList({
+                                        path: PathArray + "/" + file,
+                                        image: "",
+                                        title: "",
+                                        fav: false,
+                                        hide: false,
+                                        realName: file,
+                                    });
+                                }
+                            }
 
-                        if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`) imagePath.push(file);
+                            // if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`) imagePath.push(file);
 
-                        imagePath.forEach((val) => {
-                            fs.readFile(PathArray + "/" + val, (err, data) => {
-                                if (err) return alert("File read failed: " + err);
+                            // imagePath.forEach((val) => {
+                            //     fs.readFile(PathArray + "/" + val, (err, data) => {
+                            //         if (err) return alert("File read failed: " + err);
 
-                                const convert = "data:image/png;base64," + data.toString("base64"); // convert image file to base64 URI format
+                            //         const convert = "data:image/png;base64," + data.toString("base64"); // convert image file to base64 URI format
 
-                                scriptList.addImageFromLocal(val, convert);
-                            });
-                        });
+                            //         scriptList.addImageFromLocal(val, convert);
+                            //     });
+                            // });
+                        }
                     }
                 });
 
@@ -199,7 +208,7 @@ export function useFile() {
         await PathArray.forEach(async (value) => {
             const scriptPath = value.path.includes(":/") ? value.path : extScript.value.slice(0, extScript.value.length - 11) + value.path
 
-            deepScan(scriptPath, value.deepScan)
+            deepScan(scriptPath, value.deepScan, value.maxDeepScan, true, value.exludeFolderName)
             setHideAndFav()
         })
 
