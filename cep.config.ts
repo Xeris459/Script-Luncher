@@ -4,7 +4,7 @@ import { version } from "./package.json";
 const config: CEP_Config = {
   version,
   id: "com.axerisu.ScriptLibrary",
-  displayName: "Script Library Launcher Test",
+  displayName: "Script Library Launcher test",
   symlink: "local",
   port: 3000,
   servePort: 5000,
@@ -31,7 +31,7 @@ const config: CEP_Config = {
     {
       mainPath: "./main/index.html",
       name: "main",
-      panelDisplayName: "Script Library Launcher Test",
+      panelDisplayName: "Script Library Launcher test",
       autoVisible: true,
       width: 600,
       height: 650,
@@ -50,7 +50,7 @@ const config: CEP_Config = {
     sourceMap: false,
     jsxBin: "replace",
   },
-  installModules: [],
+  installModules: ["pinia", "vue3-popper"],
   copyAssets: [],
 };
 export default config;
