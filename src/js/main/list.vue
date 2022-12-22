@@ -172,13 +172,13 @@
       />
     </div>
 
-    <vue-simple-context-menu
+    <vueSimpleContextMenu
       element-id="myFirstMenu"
       :options="optionsArray1"
       ref="vueSimpleContextMenu1"
       @option-clicked="optionClicked1"
     >
-    </vue-simple-context-menu>
+    </vueSimpleContextMenu>
   </div>
 </template>
 
@@ -194,6 +194,7 @@ import Star from "vue-material-design-icons/Star.vue";
 import FilterMultiple from "vue-material-design-icons/FilterMultiple.vue";
 import Refresh from "vue-material-design-icons/Refresh.vue";
 import FolderPlusOutline from "vue-material-design-icons/FolderPlusOutline.vue";
+import vueSimpleContextMenu from "./vue-simple-context-menu.vue";
 
 import { useSetting } from "../store/store";
 import { useScriptList } from "../store/scriptList";
@@ -208,10 +209,10 @@ const onHoverFilter = ref("#FFFFFF");
 const onHoverRefresh = ref("#FFFFFF");
 const onHoverFolder = ref("#FFFFFF");
 const optionsArray1 = ref([
-  {
-    name: "Edit Title",
-    slug: "title",
-  },
+  // {
+  //   name: "Edit Title",
+  //   slug: "title",
+  // },
   {
     name: "Favorite",
     slug: "favorite",
