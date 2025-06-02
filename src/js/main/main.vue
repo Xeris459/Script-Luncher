@@ -41,18 +41,14 @@ let RefreshScript = () => {
 </script>
 
 <template>
-  <div
-    class="app select-none overflow-hidden"
-    :style="{ backgroundColor: backgroundColor }"
-  >
+  <div class="app select-none overflow-hidden" :style="{ backgroundColor: backgroundColor }">
     <section class="w-screen h-screen">
       <cardDonate v-if="getSetting.getAboutStatus" />
       <div class="p-2 flex-auto justify-between">
         <div>
           <div class="flex justify-between">
             <h2 class="font-semibold text-2xl text-indigo-500 mb-2 text-center">
-              Script<span class="font-thin text-white">Library</span
-              ><sup class="text-xs font-bold">BETA</sup>
+              Script<span class="font-thin text-white">Library</span><sup class="text-xs font-bold">BETA</sup>
             </h2>
             <div class="flex">
               <setting class="mt-2 ml-2 rotate-0" />
@@ -60,11 +56,8 @@ let RefreshScript = () => {
           </div>
 
           <div></div>
-          <list
-            @RefreshScript="RefreshScript"
-            :search="Search"
-            class="mt-1 h-screen overflow-y-auto flex flex-col w-full"
-          />
+          <list @RefreshScript="RefreshScript" :search="Search"
+            class="mt-1 h-screen overflow-y-auto flex flex-col w-full" />
         </div>
       </div>
     </section>

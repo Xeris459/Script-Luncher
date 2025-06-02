@@ -43,141 +43,105 @@
   <div>
     <div class="flex flex-row justify-between mb-2">
       <div class="flex flex-row">
-        <Popper
-          content="Favorite"
-          class="dark"
-          hover
-          placement="bottom"
-          arrow
-          arrowPadding="0"
-        >
-          <StarOutline
-            v-if="!getScriptList.getFavorite"
-            @mouseover="onHoverStar = '#6366f1'"
-            @mouseleave="onHoverStar = '#FFFFFF'"
-            @click="getScriptList.setFavorite(true)"
-            :size="24"
-            :fillColor="onHoverStar"
-          />
-          <Star
-            v-else
-            @mouseover="onHoverStar = '#6366f1'"
-            @mouseleave="onHoverStar = '#FFFFFF'"
-            @click="getScriptList.setFavorite(false)"
-            :size="24"
-            :fillColor="onHoverStar"
-          />
+        <Popper content="Favorite" class="dark" hover placement="bottom" arrow arrowPadding="0">
+          <StarOutline class="cursor-pointer" v-if="!getScriptList.getFavorite" @mouseover="onHoverStar = '#6366f1'"
+            @mouseleave="onHoverStar = '#FFFFFF'" @click="getScriptList.setFavorite(true)" :size="24"
+            :fillColor="onHoverStar" />
+          <Star class="cursor-pointer" v-else @mouseover="onHoverStar = '#6366f1'" @mouseleave="onHoverStar = '#FFFFFF'"
+            @click="getScriptList.setFavorite(false)" :size="24" :fillColor="onHoverStar" />
         </Popper>
-        <Popper
-          content="Refresh"
-          class="dark"
-          hover
-          placement="bottom"
-          arrow
-          arrowPadding="0"
-        >
-          <Refresh
-            class="cursor-pointer"
-            @mouseover="onHoverRefresh = '#6366f1'"
-            @mouseleave="onHoverRefresh = '#FFFFFF'"
-            @click="$emit('RefreshScript')"
-            :size="24"
-            :fillColor="onHoverRefresh"
-          />
+        <Popper content="Refresh" class="dark" hover placement="bottom" arrow arrowPadding="0">
+          <Refresh class="cursor-pointer" @mouseover="onHoverRefresh = '#6366f1'"
+            @mouseleave="onHoverRefresh = '#FFFFFF'" @click="$emit('RefreshScript')" :size="24"
+            :fillColor="onHoverRefresh" />
         </Popper>
       </div>
-      <input
-        v-model="search"
-        type="text"
+      <input v-model="search" type="text"
         class="text-xs text-white p-2 border border-1 border-indigo-800 hover:border-indigo-500 transition-all ease-in-out duration-500 rounded-md text-center tracking-tight focus:bg-zinc-800 focus:text-white focus:border-indigo-600 w-full bg-indigo-700 mx-2 h-6"
-        placeholder="Search"
-      />
+        placeholder="Search" />
       <div class="relative flex flex-row" ref="target">
-        <Popper
-          content="Add Folder"
-          class="dark"
-          hover
-          placement="bottom"
-          arrow
-          arrowPadding="0"
-        >
-          <FolderPlusOutline
-            class="cursor-pointer"
-            @mouseover="onHoverFolder = '#6366f1'"
-            @mouseleave="onHoverFolder = '#FFFFFF'"
-            @click=""
-            :size="24"
-            :fillColor="onHoverFolder"
-          />
+        <div @click="showFolder = !showFolder" class="cursor-pointer">
+          <Popper content="Add Folder" class="dark" hover placement="bottom" arrow arrowPadding="0">
+            <FolderPlusOutline @mouseover="onHoverFolder = '#6366f1'" @mouseleave="onHoverFolder = '#FFFFFF'" :size="24"
+              :fillColor="onHoverFolder" />
+          </Popper>
+        </div>
+        <Popper content="Filter" class="dark" hover placement="bottom" arrow arrowPadding="0">
+          <FilterMultiple class="cursor-pointer" @mouseover="onHoverFilter = '#6366f1'"
+            @mouseleave="onHoverFilter = '#FFFFFF'" @click="showFillter = !showFillter" :size="24"
+            :fillColor="onHoverFilter" />
         </Popper>
-        <Popper
-          content="Filter"
-          class="dark"
-          hover
-          placement="bottom"
-          arrow
-          arrowPadding="0"
-        >
-          <FilterMultiple
-            class="cursor-pointer"
-            @mouseover="onHoverFilter = '#6366f1'"
-            @mouseleave="onHoverFilter = '#FFFFFF'"
-            @click="showFillter = !showFillter"
-            :size="24"
-            :fillColor="onHoverFilter"
-          />
-        </Popper>
-        <div
-          v-if="showFillter"
-          class="absolute right-8 top-0 bg-zinc-900 border border-1 border-zinc-700 w-48 z-10 rounded-lg transition-all duration-150"
-        >
+        <div v-if="showFillter"
+          class="absolute right-8 top-0 bg-zinc-900 border border-1 border-zinc-700 w-48 z-10 rounded-lg transition-all duration-150">
           <div class="flex flex-col justify-start p-4 text-white">
             <span class="text-gray-400 text-left tracking-widest">SETTING FILTER</span>
             <ul class="flex flex-col items-start justify-start mt-2">
               <li>
                 <label class="form-check cursor-pointer">
-                  <input
-                    v-model="jsx"
-                    @click="store.setFilterList('jsx')"
+                  <input v-model="jsx" @click="store.setFilterList('jsx')"
                     class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
-                    type="checkbox"
-                  />
+                    type="checkbox" />
                   JSX
                 </label>
               </li>
               <li>
                 <label class="form-check cursor-pointer">
-                  <input
-                    v-model="jsxbin"
-                    @click="store.setFilterList('jsxbin')"
+                  <input v-model="jsxbin" @click="store.setFilterList('jsxbin')"
                     class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-indigo-500 checked:border-indigo-500 focus:outline-bottom transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer hover:bg-indigo-400 hover:border-indigo-400"
-                    type="checkbox"
-                  />
+                    type="checkbox" />
                   JSXBIN
                 </label>
               </li>
             </ul>
           </div>
         </div>
+
+        <div v-if="showFolder"
+          class="absolute right-0 top-0 bg-zinc-900 border border-1 border-zinc-700 w-56 z-10 rounded-lg transition-all duration-150">
+          <div class="flex flex-col justify-start p-4 text-white">
+            <span class="text-gray-400 text-left tracking-widest">Folder List</span>
+            <ul class="flex flex-col items-start justify-start w-full mt-2">
+              <template v-for="item in store.$state.folders" :key="item.path">
+                <li class="flex items-center justify-between text-left w-full text-xs border-b py-3">
+                  <p>{{ item.path }}</p>
+                  <button @click="removeFolder(item.path)"
+                    class="text-red-500 hover:text-red-700 ml-2 text-xs">Remove</button>
+                </li>
+              </template>
+
+              <li class="w-full">
+                <button @click="showAddFolder = true; showFolder = false"
+                  class="text-indigo-500 hover:text-indigo-700 ml-2 text-xs mt-6 w-full">Add Folder</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div v-if="showAddFolder"
+          class="absolute right-8 top-0 bg-zinc-900 border border-1 border-zinc-700 w-96 z-10 rounded-lg transition-all p-4 duration-150">
+          <div class="flex flex-col justify-start text-white">
+            <span class="text-gray-400 text-left tracking-widest">Add Folder</span>
+            <ul class="flex flex-col items-start justify-start mt-2 gap-4">
+              <li class="w-full">
+                <input v-model="folderPath" type="text"
+                  class="text-xs text-white p-2 border border-1 border-indigo-800 hover:border-indigo-500 transition-all ease-in-out duration-500 rounded-md text-center tracking-tight focus:bg-zinc-800 focus:text-white focus:border-indigo-600 w-full bg-indigo-700 mx-2 h-6"
+                  placeholder="Add Folder Path" />
+              </li>
+              <button @click="saveFolder()"
+                class="text-indigo-500 hover:text-indigo-700 ml-2 text-xs w-full">Add</button>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
     <div
-      class="flex flex-col h-screen scrollbar-thin scrollbar-thumb-indigo-700 scrollbar-track-zinc-800 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full border bottom-1 border-zinc-700 rounded-md"
-    >
-      <listMode
-        @contextmenu.prevent.stop="handleRightClick($event, list)"
-        v-on:dblclick="runFile(list.path)"
-        v-for="list in AfterFilter"
-        :list="list"
-      />
+      class="flex flex-col h-screen scrollbar-thin scrollbar-thumb-indigo-700 scrollbar-track-zinc-800 overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full border bottom-1 border-zinc-700 rounded-md">
+      <listMode @contextmenu.prevent.stop="handleRightClick($event, list)" v-on:dblclick="runFile(list.path)"
+        v-for="list in AfterFilter" :list="list" />
     </div>
 
-    <vueSimpleContextMenu
-      element-id="myFirstMenu"
-      :options="optionsArray1"
-      ref="vueSimpleContextMenu1"
-      @option-clicked="optionClicked1"
-    >
+    <vueSimpleContextMenu element-id="myFirstMenu" :options="optionsArray1" ref="vueSimpleContextMenu1"
+      @option-clicked="optionClicked1">
     </vueSimpleContextMenu>
   </div>
 </template>
@@ -223,11 +187,14 @@ const optionsArray1 = ref([
   },
 ]);
 const showFillter = ref(false);
+const showFolder = ref(false);
+const showAddFolder = ref(false);
 const target = ref(null);
 const search = ref("");
 const vueSimpleContextMenu1 = ref();
 const jsx = ref(store.getfilterList.includes("jsx"));
 const jsxbin = ref(store.getfilterList.includes("jsxbin"));
+const folderPath = ref("");
 
 let runFile = (file: string) => {
   evalFile(file);
@@ -236,15 +203,15 @@ let runFile = (file: string) => {
 const ScriptList = computed(() => {
   return getScriptList.getFavorite
     ? getScriptList.getFavoriteList.filter(
-        (v) =>
-          v.title.toLocaleLowerCase().includes(search.value) ||
-          v.realName.toLocaleLowerCase().includes(search.value)
-      )
+      (v) =>
+        v.title.toLocaleLowerCase().includes(search.value) ||
+        v.realName.toLocaleLowerCase().includes(search.value)
+    )
     : getScriptList.getInstalledList.filter(
-        (v) =>
-          v.title.toLocaleLowerCase().includes(search.value) ||
-          v.realName.toLocaleLowerCase().includes(search.value)
-      );
+      (v) =>
+        v.title.toLocaleLowerCase().includes(search.value) ||
+        v.realName.toLocaleLowerCase().includes(search.value)
+    );
 });
 
 const AfterFilter = computed(() => {
@@ -277,13 +244,22 @@ watch(
   (state) => {
     jsx.value = state.filterList.includes("jsx") ? true : false;
     jsxbin.value = state.filterList.includes("jsxbin") ? true : false;
-
-    File.save();
   },
   { deep: true }
 );
 
 onClickOutside(target, () => {
   showFillter.value = false;
+  showFolder.value = false;
+  showAddFolder.value = false;
 });
+
+const saveFolder = () => {
+  store.addFolder({ path: folderPath.value.replaceAll('\\', '/'), deepScan: true, maxDeepScan: 1 }); showAddFolder.value = false; folderPath.value = ''; File.save();
+}
+
+const removeFolder = (path: string) => {
+  store.removeFolder(path);
+  File.save();
+};
 </script>

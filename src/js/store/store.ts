@@ -1,22 +1,17 @@
 import { defineStore } from "pinia";
 
-interface Setting {
-  action: boolean,
-  image: boolean,
-  favorite: boolean,
-  filterList: string[],
-  viewMode: string,
-  about: boolean
-}
-
 export const useSetting = defineStore("setting", {
-  state: (): Setting => ({
+  state: (): settings => ({
     action: false,
     image: false,
     favorite: true,
     filterList: ["jsx", "jsxbin"],
     viewMode: "list",
-    about: false
+    about: false,
+    folders: [{ path: "Scripts", deepScan: true, maxDeepScan: 1 }],
+    exludeFolderNames: ["(instructional)", "(support)", "Shutdown", "Startup", "mac"],
+    preventDuplicate: true,
+    sort: "a-z",
   }),
   getters: {
     getActionStatus: (state) => state.action,
@@ -46,8 +41,14 @@ export const useSetting = defineStore("setting", {
     setFavoriteStatus() {
       this.favorite = !this.favorite;
     },
-    setViewMode(payload: string) {
+    setViewMode(payload: "list" | "grid") {
       this.viewMode = payload
-    }
+    },
+    removeFolder(payload: string) {
+      this.folders = this.folders.filter((v) => v.path != payload);
+    },
+    addFolder(payload: folder) {
+      this.folders.push(payload);
+    },
   },
 });

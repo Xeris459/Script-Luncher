@@ -1,6 +1,7 @@
 import { onMounted, reactive, ref } from "vue";
 import { useScriptList } from "../store/scriptList";
 import { useSetting } from "../store/store";
+import { storeLogs } from "../store/StoreLog";
 import { fs, path } from "../lib/node";
 import { csi } from "../lib/utils";
 
@@ -43,8 +44,9 @@ export function useFile() {
             favorite: setting.$state.favorite,
             filterList: setting.$state.filterList,
             viewMode: setting.$state.viewMode,
-            folder: [{ path: "Scripts", deepScan: true, maxDeepScan: 1 }],
-            exludeFolderName: ["(instructional)", "(support)", "Shutdown", "Startup", "mac"]
+            folder: setting.$state.folders,
+            exludeFolderName: setting.$state.exludeFolderNames,
+            preventDuplicate: setting.$state.preventDuplicate,
         },
         Script: SavedScript
     })
@@ -56,6 +58,9 @@ export function useFile() {
         Store.setting.favorite = await setting.$state.favorite
         Store.setting.filterList = await setting.$state.filterList
         Store.setting.viewMode = await setting.$state.viewMode
+        Store.setting.folder = await setting.$state.folders
+        Store.setting.exludeFolderName = await setting.$state.exludeFolderNames
+        Store.setting.preventDuplicate = await setting.$state.preventDuplicate
 
         if (!isFirstLoad.value) {
             Store.Script = await scriptList.$state.installedList.filter((v) => {
@@ -121,6 +126,9 @@ export function useFile() {
         setting.$state.favorite = Store.setting.favorite;
         setting.$state.filterList = Store.setting.filterList;
         setting.$state.viewMode = Store.setting.viewMode;
+        setting.$state.folders = Store.setting.folder;
+        setting.$state.exludeFolderNames = Store.setting.exludeFolderName;
+        setting.$state.preventDuplicate = Store.setting.preventDuplicate;
     }
 
     function setHideAndFav() {
@@ -141,72 +149,89 @@ export function useFile() {
         if (!fs.existsSync(extRoot.value)) await fs.mkdirSync(extRoot.value, { recursive: true });
     }
 
-    function deepScan(PathArray: string, deep: boolean = false, deepCountMax: number = 1, root: boolean = false, exclude: string) {
-        if (root) deepScanCount.value = 1;
+    function deepScan(PathArray: string, deep: boolean = false, deepCountMax: number = 1, root: boolean = false, exclude: string[] = []) {
+        try {
+            if (root) deepScanCount.value = 1;
 
-        fs.readdir(PathArray, async (err, files) => {
-            if (err) return alert("File read failed: " + err);
+            fs.readdir(PathArray, async (err, files) => {
+                if (err) return alert("File read failed: " + err);
 
-            let imagePath: string[] = [];
-            await files.forEach((file, index) => {
-                let ext = path.extname(file);
+                let imagePath: string[] = [];
+                await files.forEach((file, index) => {
+                    let ext = path.extname(file);
 
-                fs.lstat(PathArray + "/" + file, (err, stats) => {
-                    // if (exclude.includes(file)) return;
+                    fs.lstat(PathArray + "/" + file, (err, stats) => {
+                        if (exclude.includes(file)) return;
 
-                    if (stats.isDirectory()) {
-                        if (deep && deepScanCount.value <= deepCountMax) {
-                            deepScanCount.value = deepScanCount.value - 1;
-                            deepScan(PathArray + "/" + file, deep, 1, false, exclude)
-                        }
-                    } else {
-                        if (stats.isFile()) {
-                            if (ext === `.jsx` || ext === `.jsxbin`) {
-                                const Find: FavScript | undefined = FavStore.value.find((x: FavScript) => x.realName == file)
-                                if (Find) {
-                                    const FindScript: FavScript = Find
-                                    scriptList.addInstalledList({
-                                        path: PathArray + "/" + file,
-                                        image: FindScript.image,
-                                        title: FindScript.title,
-                                        fav: FindScript.fav,
-                                        hide: FindScript.hide,
-                                        realName: file,
-                                    });
-                                } else {
-                                    scriptList.addInstalledList({
-                                        path: PathArray + "/" + file,
-                                        image: "",
-                                        title: "",
-                                        fav: false,
-                                        hide: false,
-                                        realName: file,
-                                    });
-                                }
+                        if (stats.isDirectory()) {
+                            if (deep && deepScanCount.value <= deepCountMax) {
+                                deepScanCount.value = deepScanCount.value - 1;
+                                deepScan(PathArray + "/" + file, deep, 1, false, exclude)
                             }
+                        } else {
+                            if (stats.isFile()) {
+                                if (ext === `.jsx` || ext === `.jsxbin`) {
+                                    const Find: FavScript | undefined = FavStore.value.find((x: FavScript) => x.realName == file)
 
-                            // if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`) imagePath.push(file);
+                                    // prevent duplicate
+                                    if (Store.setting.preventDuplicate) {
+                                        const isExist = scriptList.getInstalledList.find((x) => x.realName == file);
+                                        if (isExist) return;
+                                    }
 
-                            // imagePath.forEach((val) => {
-                            //     fs.readFile(PathArray + "/" + val, (err, data) => {
-                            //         if (err) return alert("File read failed: " + err);
+                                    if (Find) {
+                                        const FindScript: FavScript = Find
+                                        scriptList.addInstalledList({
+                                            path: PathArray + "/" + file,
+                                            image: FindScript.image,
+                                            title: FindScript.title,
+                                            fav: FindScript.fav,
+                                            hide: FindScript.hide,
+                                            realName: file,
+                                        });
+                                    } else {
+                                        scriptList.addInstalledList({
+                                            path: PathArray + "/" + file,
+                                            image: "",
+                                            title: "",
+                                            fav: false,
+                                            hide: false,
+                                            realName: file,
+                                        });
+                                    }
+                                }
 
-                            //         const convert = "data:image/png;base64," + data.toString("base64"); // convert image file to base64 URI format
+                                // if (ext === `.jpg` || ext === `.jpeg` || ext === `.png`) imagePath.push(file);
 
-                            //         scriptList.addImageFromLocal(val, convert);
-                            //     });
-                            // });
+                                // imagePath.forEach((val) => {
+                                //     fs.readFile(PathArray + "/" + val, (err, data) => {
+                                //         if (err) return alert("File read failed: " + err);
+
+                                //         const convert = "data:image/png;base64," + data.toString("base64"); // convert image file to base64 URI format
+
+                                //         scriptList.addImageFromLocal(val, convert);
+                                //     });
+                                // });
+                            }
                         }
-                    }
-                });
+                    });
 
+                })
             })
-        })
+        } catch (error) {
+            storeLogs().addLog({
+                type: "error",
+                message: `Error during deep scan: ${error}`,
+                time: new Date().toLocaleTimeString(),
+            });
+            console.error("Error during deep scan:", error);
+        }
     }
 
     async function loadFromFolder(PathArray: any[]) {
+
         await PathArray.forEach(async (value) => {
-            const scriptPath = value.path.includes(":/") ? value.path : extScript.value.slice(0, extScript.value.length - 11) + value.path
+            const scriptPath = value.path.includes(":/") || value.path.includes(":\\") ? value.path : extScript.value.slice(0, extScript.value.length - 11) + value.path
 
             deepScan(scriptPath, value.deepScan, value.maxDeepScan, true, value.exludeFolderName)
             setHideAndFav()
